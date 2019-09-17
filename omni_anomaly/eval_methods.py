@@ -54,8 +54,8 @@ def adjust_predicts(score, label,
     anomaly_count = 0
     for i in range(len(score)):
         if actual[i] and predict[i] and not anomaly_state:
-                anomaly_state = True
-                anomaly_count += 1
+            anomaly_state = True
+            anomaly_count += 1
         elif not actual[i]:
             anomaly_state = False
         if anomaly_state:

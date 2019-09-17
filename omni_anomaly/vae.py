@@ -275,10 +275,13 @@ class VAE(VarScopeObject):
             q_z_given_x = self.q_z_given_x(**z_params)
             assert (isinstance(q_z_given_x, Distribution))
         with tf.name_scope('z'):
+            # z = net.add('z', q_z_given_x, n_samples=n_z,
+            #             group_ndims=self.z_group_ndims,
+            #             is_reparameterized=self.is_reparameterized,
+            #             flow=posterior_flow)
             z = net.add('z', q_z_given_x, n_samples=n_z,
                         group_ndims=self.z_group_ndims,
-                        is_reparameterized=self.is_reparameterized,
-                        flow=posterior_flow)
+                        is_reparameterized=self.is_reparameterized)
         return net
 
     @instance_reuse
@@ -515,4 +518,3 @@ class Lambda(VarScopeObject):
             # unique name scope.
             with tf.name_scope('forward'):
                 return self._forward(inputs, **kwargs)
-

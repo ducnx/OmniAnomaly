@@ -39,7 +39,7 @@ pip install -r requirements.txt
 #### Preprocess the data
 
 ```shell
-python data_process.py <dataset>
+python data_preprocess.py <dataset>
 ```
 
 where `<dataset>` is one of `SMAP`, `MSL` or `SMD`.

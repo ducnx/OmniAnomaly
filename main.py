@@ -11,7 +11,7 @@ from pprint import pformat, pprint
 import numpy as np
 import tensorflow as tf
 from tfsnippet.examples.utils import MLResults, print_with_title
-from tfsnippet.scaffold import VariableSaver
+from tfsnippet.scaffold import CheckpointSaver
 from tfsnippet.utils import get_variables_as_dict, register_config_arguments, Config
 
 from omni_anomaly.eval_methods import pot_eval, bf_search
@@ -114,8 +114,8 @@ def main():
 
             if config.restore_dir is not None:
                 # Restore variables from `save_dir`.
-                saver = VariableSaver(get_variables_as_dict(model_vs), config.restore_dir)
-                saver.restore()
+                saver = CheckpointSaver(get_variables_as_dict(model_vs), config.restore_dir)
+                saver.restore_latest()
 
             if config.max_epoch > 0:
                 # train the model
@@ -181,7 +181,7 @@ def main():
             if config.save_dir is not None:
                 # save the variables
                 var_dict = get_variables_as_dict(model_vs)
-                saver = VariableSaver(var_dict, config.save_dir)
+                saver = CheckpointSaver(var_dict, config.save_dir)
                 saver.save()
             print('=' * 30 + 'result' + '=' * 30)
             pprint(best_valid_metrics)

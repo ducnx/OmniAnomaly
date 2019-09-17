@@ -72,8 +72,15 @@ class RecurrentDistribution(Distribution):
 
     def __init__(self, input_q, mean_q_mlp, std_q_mlp, z_dim, window_length=100, is_reparameterized=True,
                  check_numerics=True):
-        super(RecurrentDistribution, self).__init__()
         self.normal = Normal(mean=tf.zeros([window_length, z_dim]), std=tf.ones([window_length, z_dim]))
+        super(RecurrentDistribution, self).__init__(
+            dtype=self.normal.dtype,
+            is_continuous=True,
+            is_reparameterized=is_reparameterized,
+            batch_shape=self.normal.batch_shape,
+            batch_static_shape=self.normal.get_batch_shape(),
+            value_ndims=self.normal.value_ndims
+        )
         self.std_q_mlp = std_q_mlp
         self.mean_q_mlp = mean_q_mlp
         self._check_numerics = check_numerics

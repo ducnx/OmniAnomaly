@@ -3,6 +3,7 @@ from functools import partial
 
 import tensorflow as tf
 import tfsnippet as spt
+from tensorflow.python import keras
 from tensorflow.python.ops.linalg.linear_operator_identity import LinearOperatorIdentity
 from tensorflow_probability.python.distributions import LinearGaussianStateSpaceModel, MultivariateNormalDiag
 from tfsnippet.distributions import Normal
@@ -43,7 +44,7 @@ class OmniAnomaly(VarScopeObject):
                 ) if config.use_connected_z_p else Normal(mean=tf.zeros([config.z_dim]), std=tf.ones([config.z_dim])),
                 p_x_given_z=Normal,
                 q_z_given_x=partial(RecurrentDistribution,
-                                    mean_q_mlp=partial(tf.layers.dense, units=config.z_dim, name='z_mean',
+                                    mean_q_mlp=partial(keras.layers.Dense, units=config.z_dim, name='z_mean',
                                                        reuse=tf.AUTO_REUSE),
                                     std_q_mlp=partial(softplus_std, units=config.z_dim, epsilon=config.std_epsilon,
                                                       name='z_std'),
@@ -58,7 +59,7 @@ class OmniAnomaly(VarScopeObject):
                                                  dense_dim=config.dense_dim,
                                                  name='rnn_p_x'),
                         mean_layer=partial(
-                            tf.layers.dense, units=config.x_dim, name='x_mean', reuse=tf.AUTO_REUSE
+                            keras.layers.Dense, units=config.x_dim, name='x_mean', reuse=tf.AUTO_REUSE
                         ),
                         std_layer=partial(
                             softplus_std, units=config.x_dim, epsilon=config.std_epsilon,
@@ -85,7 +86,7 @@ class OmniAnomaly(VarScopeObject):
                                                  dense_dim=config.dense_dim,
                                                  name="rnn_q_z"),
                         mean_layer=partial(
-                            tf.layers.dense, units=config.z_dim, name='z_mean', reuse=tf.AUTO_REUSE
+                            keras.layers.Dense, units=config.z_dim, name='z_mean', reuse=tf.AUTO_REUSE
                         ),
                         std_layer=partial(
                             softplus_std, units=config.z_dim, epsilon=config.std_epsilon,

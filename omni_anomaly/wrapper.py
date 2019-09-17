@@ -3,6 +3,7 @@ import logging
 
 import tensorflow as tf
 import tensorflow_probability as tfp
+from tensorflow.python import keras
 from tfsnippet.distributions import Distribution
 
 
@@ -84,7 +85,7 @@ class TfpDistribution(Distribution):
 
 
 def softplus_std(inputs, units, epsilon, name):
-    return tf.nn.softplus(tf.layers.dense(inputs, units, name=name, reuse=tf.AUTO_REUSE)) + epsilon
+    return tf.nn.softplus(keras.layers.Dense(inputs, units, name=name, reuse=tf.AUTO_REUSE)) + epsilon
 
 
 def rnn(x,
@@ -109,7 +110,7 @@ def rnn(x,
             fw_cell = rnn.BasicLSTMCell(rnn_num_hidden,
                                         forget_bias=1.0)
         elif rnn_cell == "GRU":
-            fw_cell = tf.nn.rnn_cell.GRUCell(rnn_num_hidden)
+            fw_cell = tf.keras.layers.GRUCell(rnn_num_hidden)
         elif rnn_cell == 'Basic':
             fw_cell = tf.nn.rnn_cell.BasicRNNCell(rnn_num_hidden)
         else:
@@ -123,7 +124,7 @@ def rnn(x,
             outputs = rnn.static_rnn(fw_cell, x, dtype=tf.float32)
         outputs = tf.stack(outputs, axis=time_axis)
         for i in range(hidden_dense):
-            outputs = tf.layers.dense(outputs, dense_dim)
+            outputs = keras.layers.Dense(outputs, dense_dim)
         return outputs
     # return size: (batch_size, window_length, rnn_num_hidden)
 
